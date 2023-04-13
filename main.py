@@ -94,6 +94,26 @@ async def createDeviceDetails(devices: DeviceDetails, request: Request):
             if id == devices.id:
                 return {"msg": {f"id {devices.id} already exist in devices, try using other id"}}
 
+@app.put("/device/details/update/{item_id}", tags=["Devices"], description="Update Device Details By ID", summary="Update Device Details By ID")
+def updateDeviceDetailsById(device: DevicesDetailsPut, item_id: int):
+    existing_devices = device_detail_collections.find_one({"_id": item_id})
+    if existing_devices is None:
+        return {"message": f"Device with ID {item_id} not found."}
+    update_fields = {}
+    if device.name is not None:
+        update_fields['name'] = device.name
+    if device.room is not None:
+        update_fields['room'] = device.room
+    if  device.device_id is not None:
+        update_fields['device_id'] = device.device_id
+    if  device.type is not None:
+        update_fields['type'] = device.type 
+    device_detail_collections.update_one(
+        {"_id": item_id},
+        {"$set": update_fields}
+    )
+    return {"msg": f"updated device id {item_id} to {update_fields}"}
+
 @app.delete("/device/details/delete/{item_id}", tags=["Devices"], description="Delete Device Details By ID", summary="Delete Device Details By ID")
 async def deleteDeviceDetailsById(item_id: int):
     existing_device = device_detail_collections.find_one({"_id": item_id})
@@ -242,6 +262,26 @@ async def createFanDetails(devices: FanDetails, request: Request):
             if id == devices.id:
                 return {"msg": {f"id {devices.id} already exist in devices, try using other id"}}
 
+@app.put("/fan/details/update/{item_id}", tags=["Fan"], description="Update Fan Details By ID", summary="Update Fan Details By ID")
+def updateFanDetailsById(device: FanDetailsPut, item_id: int):
+    existing_fan = fan_details_collections.find_one({"_id": item_id})
+    if existing_fan is None:
+        return {"message": f"Fan with ID {item_id} not found."}
+    update_fields = {}
+    if device.name is not None:
+        update_fields['name'] = device.name
+    if device.room is not None:
+        update_fields['room'] = device.room
+    if  device.device_id is not None:
+        update_fields['device_id'] = device.device_id
+    if  device.type is not None:
+        update_fields['type'] = device.type 
+    fan_details_collections.update_one(
+        {"_id": item_id},
+        {"$set": update_fields}
+    )
+    return {"msg": f"updated device id {item_id} to {update_fields}"}
+
 @app.delete("/fan/details/delete/{item_id}", tags=["Fan"], description="Delete Fan Details By ID", summary="Delete Fan Details By ID")
 async def deleteFanDetailsById(item_id: int):
     existing_fan = fan_details_collections.find_one({"_id": item_id})
@@ -384,9 +424,13 @@ async def getLedDetailsById(item_id: int):
 @app.post("/led/details/create", tags=["LED"], description="Create New Led Details", summary="Create New Led Details")
 async def getLedDetails(devices: LedDetails, request: Request):
     try:
-        led_details_collections.insert_one(
-            {"_id": devices.id, "name": devices.name, "room": devices.room, "device_id": devices.device_id,
-             "type": devices.type})
+        led_details_collections.insert_one({
+            "_id": devices.id,
+            "name": devices.name,
+            "room": devices.room,
+            "device_id": devices.device_id,
+            "type": devices.type
+        })
         return {"msg": "created successfully", "created_data": devices, "client": request.client}
     except:
         documents = led_details_collections.find()
@@ -394,6 +438,26 @@ async def getLedDetails(devices: LedDetails, request: Request):
             id = document["_id"]
             if id == devices.id:
                 return {"msg": {f"id {devices.id} already exist in devices, try using other id"}}
+
+@app.put("/led/details/update/{item_id}", tags=["LED"], description="Update Led Details By ID", summary="Update Led Details By ID")
+def updateLedDetailsById(device: LedDetailsPut, item_id: int):
+    existing_led = led_details_collections.find_one({"_id": item_id})
+    if existing_led is None:
+        return {"message": f"Fan with ID {item_id} not found."}
+    update_fields = {}
+    if device.name is not None:
+        update_fields['name'] = device.name
+    if device.room is not None:
+        update_fields['room'] = device.room
+    if  device.device_id is not None:
+        update_fields['device_id'] = device.device_id
+    if  device.type is not None:
+        update_fields['type'] = device.type 
+    led_details_collections.update_one(
+        {"_id": item_id},
+        {"$set": update_fields}
+    )
+    return {"msg": f"updated device id {item_id} to {update_fields}"}
 
 @app.delete("/led/details/delete/{item_id}", tags=["LED"], description="Delete Led Details By ID", summary="Delete Led Details By ID")
 async def deleteLedDetailsById(item_id: int):
@@ -510,6 +574,26 @@ async def createMechanicsDetails(devices: MechanicsDetails, request: Request):
             id = document["_id"]
             if id == devices.id:
                 return {"msg": {f"id {devices.id} already exist in devices, try using other id"}}
+
+@app.put("/mechanics/details/update/{item_id}", tags=["Mechanics"], description="Update Mechanics Details By ID", summary="Update Mechanics Details By ID")
+def updateMechanicsDetailsById(device: MechanicsDetailsPut, item_id: int):
+    existing_led = mechanics_details_collections.find_one({"_id": item_id})
+    if existing_led is None:
+        return {"message": f"Fan with ID {item_id} not found."}
+    update_fields = {}
+    if device.name is not None:
+        update_fields['name'] = device.name
+    if device.room is not None:
+        update_fields['room'] = device.room
+    if  device.device_id is not None:
+        update_fields['device_id'] = device.device_id
+    if  device.type is not None:
+        update_fields['type'] = device.type 
+    mechanics_details_collections.update_one(
+        {"_id": item_id},
+        {"$set": update_fields}
+    )
+    return {"msg": f"updated device id {item_id} to {update_fields}"}
 
 @app.delete("/mechanics/details/delete/{item_id}", tags=["Mechanics"], description="Delete Mechanics Details By ID", summary="Delete Mechanics Details By ID")
 async def deleteMechanicsDetailsById(item_id: int):
@@ -1079,9 +1163,13 @@ async def getMotionsensorDetailsById(item_id: int):
 @app.post("/motionsensor/details/create", tags=["Motion Sensor"], description="Create New Motionsensor Details", summary="Create New Motionsensor Details")
 async def createMotionsensorDetails(devices: MotionSensorDetails, request: Request):
     try:
-        motionsensor_details_collections.insert_one(
-            {"_id": devices.id, "name": devices.name, "room": devices.room, "device_id": devices.device_id,
-             "type": devices.type})
+        motionsensor_details_collections.insert_one({
+            "_id": devices.id,
+            "name": devices.name,
+            "room": devices.room,
+            "device_id": devices.device_id,
+            "type": devices.type
+        })
         return {"msg": "created successfully", "created_data": devices, "client": request.client}
     except:
         documents = motionsensor_details_collections.find()
